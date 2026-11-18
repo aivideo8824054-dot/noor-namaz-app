@@ -21,12 +21,16 @@ jobs:
           java-version: '17'
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
+        with:
+          accept-android-sdk-licenses: true
+          log-accepted-android-sdk-licenses: false
 
       - name: Extract project ZIP
         run: |
           unzip -q Noor-Namaz-Updated-Project.zip -d extracted
           ROOT=$(dirname "$(find extracted -name settings.gradle -print -quit)")
+          test -f "$ROOT/settings.gradle"
           cp -r "$ROOT/app" ./app
           cp "$ROOT/settings.gradle" ./settings.gradle
           cp "$ROOT/build.gradle" ./build.gradle
