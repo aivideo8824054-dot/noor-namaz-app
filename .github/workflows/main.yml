@@ -24,17 +24,20 @@ jobs:
         uses: android-actions/setup-android@v4
         with:
           accept-android-sdk-licenses: true
-          log-accepted-android-sdk-licenses: false
 
       - name: Extract project ZIP
         run: |
           unzip -q Noor-Namaz-Updated-Project.zip -d extracted
           ROOT=$(dirname "$(find extracted -name settings.gradle -print -quit)")
-          test -f "$ROOT/settings.gradle"
           cp -r "$ROOT/app" ./app
           cp "$ROOT/settings.gradle" ./settings.gradle
           cp "$ROOT/build.gradle" ./build.gradle
           cp "$ROOT/gradle.properties" ./gradle.properties
+
+      - name: Fix Nullable error
+        run: |
+          sed -i '/import androidx.annotation.Nullable;/d' app/src/main/java/com/noornamaz/app/MainActivity.java
+          sed -i 's/@Nullable Intent d/Intent d/' app/src/main/java/com/noornamaz/app/MainActivity.java
 
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
